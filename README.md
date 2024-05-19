@@ -1,21 +1,27 @@
-# React Blob
+# Blob-Fns
 
-React Blob is a lightweight npm package for generating and handling small Blob objects in various formats, making it easier to work with binary data in web applications.
+Blob-Fns is a lightweight npm package for generating and handling small Blob objects in various formats, making it easier to work with binary data in web applications.
 
-## Features
+## 🚀 Features
 
-- **Text Blob**: Create a Blob from a text string.
-- **JSON Blob**: Create a Blob from a JSON object.
-- **Image Blob**: Create a Blob from a Base64 encoded image.
-- **Binary Data Blob**: Create a Blob from binary data.
-- **Blob to Base64**: Convert a Blob to a Base64 string.
-- **Base64 to Blob**: Convert a Base64 string to a Blob.
-- **Download Blob**: Trigger a file download for a Blob.
-- **Display Blob Content**: Display text Blob content or image Blob in the browser.
-- **Blob Metadata**: Extract metadata from a Blob.
-- **Blob Compression**: Compress image Blobs.
+The Blob Utilities package provides a variety of functions to work with Blob objects in JavaScript and TypeScript. These functions cover creating Blobs from different data types, converting Blobs to other formats, downloading Blobs as files, and compressing Blob data. The package is lightweight and easy to use.
 
-## Use Cases
+### Functions Offered
+
+1. **createAndDownloadBlob**: Create a Blob from data and download it as a file.
+2. **blobToBase64**: Convert a Blob to a Base64 string.
+3. **base64ToBlob**: Convert a Base64 string to a Blob.
+4. **getBlobMetadata**: Retrieve metadata (type and size) from a Blob.
+5. **compressBlob**: Compress an image Blob to a specified quality.
+6. **createTextBlob**: Create a Blob from a text string.
+7. **createJSONBlob**: Create a Blob from a JSON object.
+8. **createImageBlob**: Create a Blob from a Base64 image string.
+9. **createBinaryBlob**: Create a Blob from binary data.
+10. **blobToJSON**: Convert a Blob back to a JSON object.
+11. **blobToImage**: Convert a Blob back to an image in Base64 format.
+12. **blobToText**: Convert a Blob back to a text string.
+
+## 💡 Use Cases
 
 ### File Downloads
 
@@ -41,122 +47,149 @@ Copy blobs (e.g., images, files) to the clipboard for pasting into other applica
 
 Convert between various data formats such as ArrayBuffer, Base64, and Blob to support diverse application needs.
 
-## Installation
+## 📦 Installation
 
 Install the package using npm:
 
 ```ssh
-npm install react-blob
+npm install blob-fns
 ```
 
 or
 
 ```ssh
-yarn add react-blob
+yarn add blob-fns
 ```
 
-## Usage
+## 📚 Usage
 
-- **Create a Text Blob**
+- **createAndDownloadBlob**
 
-```ssh
+```typescript
+import { createAndDownloadBlob } from 'blob-utilities';
+
+const textBlob = new Blob(['Hello, world!'], { type: 'text/plain' });
+createAndDownloadBlob(textBlob, 'hello.txt');
+```
+
+- **blobToBase64**
+
+```typescript
+import { blobToBase64 } from 'blob-utilities';
+
+const blob = new Blob(['Hello, world!'], { type: 'text/plain' });
+blobToBase64(blob).then(base64 => {
+  console.log(base64);
+});
+```
+
+- **base64ToBlob**
+
+```typescript
+import { base64ToBlob } from 'blob-utilities';
+
+const base64 = 'data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==';
+const blob = base64ToBlob(base64);
+console.log(blob);
+```
+
+- **getBlobMetadata**
+
+```typescript
+import { getBlobMetadata } from 'blob-utilities';
+
+const blob = new Blob(['Hello, world!'], { type: 'text/plain' });
+const metadata = getBlobMetadata(blob);
+console.log(metadata); // { type: 'text/plain', size: 13 }
+```
+
+- **compressBlob**
+
+```typescript
+import { compressBlob } from 'blob-utilities';
+
+const base64Image = 'data:image/png;base64,...'; // A valid Base64 string
+const imageBlob = base64ToBlob(base64Image, 'image/png');
+compressBlob(imageBlob, 0.7).then(compressedBlob => {
+  console.log(compressedBlob);
+});
+```
+
+- **createTextBlob**
+
+```typescript
 import { createTextBlob } from 'blob-utilities';
 
 const textBlob = createTextBlob('Hello, world!');
 console.log(textBlob);
 ```
 
-- **Create a JSON Blob**
+- **createJSONBlob**
 
-```ssh
+```typescript
 import { createJSONBlob } from 'blob-utilities';
 
-const jsonBlob = createJSONBlob({ message: 'Hello, world!' });
+const jsonObject = { message: 'Hello, world!' };
+const jsonBlob = createJSONBlob(jsonObject);
 console.log(jsonBlob);
 ```
 
-- **Create an Image Blob**
+- **createImageBlob**
 
-```ssh
+```typescript
 import { createImageBlob } from 'blob-utilities';
 
+const base64Image = 'data:image/png;base64,...'; // A valid Base64 string
 const imageBlob = createImageBlob(base64Image);
 console.log(imageBlob);
 ```
 
-- **Create a Binary Data Blob**
+- **createBinaryBlob**
 
-```ssh
+```typescript
 import { createBinaryBlob } from 'blob-utilities';
 
-const binaryBlob = createBinaryBlob([72, 101, 108, 108, 111]); // Binary representation of 'Hello'
+const binaryData = new Uint8Array([72, 101, 108, 108, 111]); // Binary representation of 'Hello'
+const binaryBlob = createBinaryBlob(binaryData);
 console.log(binaryBlob);
 ```
 
-- **Convert Blob to Base64**
+- **blobToJSON**
 
-```ssh
-import { blobToBase64 } from 'blob-utilities';
+```typescript
+import { blobToJSON } from 'blob-utilities';
 
-blobToBase64(imageBlob).then(base64 => {
- console.log(base64);
+const jsonBlob = createJSONBlob({ message: 'Hello, world!' });
+blobToJSON(jsonBlob).then(jsonObject => {
+  console.log(jsonObject); // { message: 'Hello, world!' }
 });
 ```
 
-- **Convert Base64 to Blob**
+- **blobToImage**
 
-```ssh
-import { base64ToBlob } from 'blob-utilities';
+```typescript
+import { blobToImage } from 'blob-utilities';
 
-const blob = base64ToBlob(base64, 'image/png');
-console.log(blob);
-```
-
-- **Download Blob as File**
-
-```ssh
-import { downloadBlob } from 'blob-utilities';
-
-downloadBlob(jsonBlob, 'data.json');
-```
-
-- **Display Text Blob Content**
-
-```ssh
-import { displayTextBlobContent } from 'blob-utilities';
-
-displayTextBlobContent(textBlob);
-
-```
-
-- **Display Image Blob**
-
-```ssh
-import { displayImageBlob } from 'blob-utilities';
-
-displayImageBlob(imageBlob);
-
-```
-
-- **Get Blob Metadata**
-
-```ssh
-import { getBlobMetadata } from 'blob-utilities';
-
-const metadata = getBlobMetadata(imageBlob);
-console.log(metadata);
-
-```
-
-- **Compress Blob**
-
-```ssh
-import { compressBlob } from 'blob-utilities';
-
-compressBlob(imageBlob, 0.7).then(compressedBlob => {
- console.log(compressedBlob);
+const base64Image = 'data:image/png;base64,...'; // A valid Base64 string
+const imageBlob = createImageBlob(base64Image);
+blobToImage(imageBlob).then(base64 => {
+  console.log(base64);
 });
 ```
+
+- **blobToText**
+
+```typescript
+import { blobToText } from 'blob-utilities';
+
+const textBlob = createTextBlob('Hello, world!');
+blobToText(textBlob).then(text => {
+  console.log(text); // 'Hello, world!'
+});
+```
+
+
+
 
 ## Check Out My Other Packages
 
