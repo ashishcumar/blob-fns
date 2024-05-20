@@ -1,4 +1,3 @@
-
 const createAndDownloadBlob = (
   data: any,
   fileName: string,
@@ -9,6 +8,7 @@ const createAndDownloadBlob = (
       "data, fileName, and mimeType are required for createAndDownloadBlob"
     );
   }
+  console.log("createAndDownloadBlob -->", { data, fileName, mimeType });
   const blob = new Blob([data], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -31,9 +31,24 @@ const fetchAndDownloadBlob = async (
     );
   }
   const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Network response was not ok: ${response.statusText}`);
+  }
+
   const blob = await response.blob();
-  const data = await blobToBase64(blob);
-  createAndDownloadBlob(data, fileName, mimeType);
+
+  const a = document.createElement("a");
+  const urls = URL.createObjectURL(blob);
+
+  a.href = urls;
+  a.download = fileName;
+  a.type = mimeType;
+
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(urls);
 };
 
 const blobToBase64 = (blob: Blob): Promise<string | ArrayBuffer | null> => {
