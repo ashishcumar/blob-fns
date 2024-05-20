@@ -1,3 +1,4 @@
+
 const createAndDownloadBlob = (
   data: any,
   fileName: string,
@@ -17,6 +18,22 @@ const createAndDownloadBlob = (
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+};
+
+const fetchAndDownloadBlob = async (
+  url: string,
+  fileName: string,
+  mimeType: string
+): Promise<void> => {
+  if (!url || !fileName || !mimeType) {
+    throw new Error(
+      "url, fileName, and mimeType are required for fetchAndDownloadBlob"
+    );
+  }
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const data = await blobToBase64(blob);
+  createAndDownloadBlob(data, fileName, mimeType);
 };
 
 const blobToBase64 = (blob: Blob): Promise<string | ArrayBuffer | null> => {
@@ -158,6 +175,7 @@ function blobToImage(blob: Blob): Promise<string> {
 
 export {
   createAndDownloadBlob,
+  fetchAndDownloadBlob,
   blobToBase64,
   base64ToBlob,
   getBlobMetadata,
