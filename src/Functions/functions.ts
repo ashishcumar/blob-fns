@@ -30,6 +30,7 @@ const fetchAndDownloadBlob = async (
       "url, fileName, and mimeType are required for fetchAndDownloadBlob"
     );
   }
+  fileName = fileName.replaceAll('.','')
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Network response was not ok: ${response.statusText}`);

@@ -1,12 +1,12 @@
 {
   "name": "blob-fns",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Blob fns is a lightweight, versatile npm package designed to simplify working with Blob objects in JavaScript. Whether you're dealing with text, JSON, images, or binary data, Blob Utilities provides an easy-to-use API for creating, converting, and manipulating Blob objects, making it an essential tool for web developers handling file and data operations.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup && git add . && git commit -m 'deployed-automated-build' && git push"
   },
   "repository": {
     "type": "git",
