@@ -39,7 +39,7 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm publish
+          npm publish --registry https://registry.npmjs.org/
 
       - name: Push changes and tags
         env:
