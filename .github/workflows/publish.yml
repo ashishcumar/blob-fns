@@ -54,7 +54,6 @@ jobs:
 
       - name: Debug npm whoami
         run: npm whoami
-        timeout-minutes: 5
 
       - name: Publish package
         env:
