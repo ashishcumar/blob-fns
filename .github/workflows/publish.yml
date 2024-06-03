@@ -54,22 +54,15 @@ jobs:
           fi
 
       - name: Debug npm whoami
-        run: |
-          npm whoami || exit 1
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm whoami || exit 1
 
       - name: Publish package
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
-
-      - name: Upload npm debug log
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: npm-debug-log
-          path: ~/.npm/_logs/npm-debug.log
 
       - name: Push changes and tags
         if: success()
