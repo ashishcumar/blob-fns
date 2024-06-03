@@ -40,15 +40,25 @@ jobs:
         run: |
           npm version patch -m "chore(release): %s [skip ci]"
 
-      # Step 6: Publish the package
-      - name: Publish package
+      # Step 6: Debug npm publish
+      - name: Debug npm publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          npm publish
+          npm whoami
+          npm publish --access public --verbose
 
-      # Step 7: Push changes and tags to the repository
+      # Step 7: Publish the package
+      - name: Publish package
+        if: always()  # Ensure this runs even if the debug step fails
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          npm publish --access public
+
+      # Step 8: Push changes and tags to the repository
       - name: Push changes and tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
