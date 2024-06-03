@@ -35,8 +35,7 @@ jobs:
       - name: Bump version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-         npm version patch -m "chore(release): %s [skip ci]"
+        run: npm version patch -m "chore(release): %s [skip ci]"
 
       - name: Configure NPM authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
@@ -54,16 +53,25 @@ jobs:
           fi
 
       - name: Debug npm whoami
+        run: |
+          npm whoami || exit 1
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm whoami
 
       - name: Publish package
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
 
+      - name: Upload npm debug log
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-debug-log
+          path: ~/.npm/_logs/npm-debug.log
+
       - name: Push changes and tags
+        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: git push origin HEAD:main --tags
