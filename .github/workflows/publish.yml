@@ -53,11 +53,10 @@ jobs:
             echo "NPM_TOKEN is set"
           fi
 
-      - name: Debug npm whoami
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm whoami || exit 1
+       - name: Debug npm whoami
+         run: npm whoami
+         env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish package
         env:
