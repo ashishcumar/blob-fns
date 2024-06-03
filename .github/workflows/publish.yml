@@ -10,26 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "16"
           registry-url: "https://registry.npmjs.org"
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build the package
       - name: Build package
         run: npm run build
 
-      # Step 5: Commit any uncommitted changes (like the build output)
       - name: Commit uncommitted changes
         run: |
           git config user.name "github-actions[bot]"
@@ -37,32 +32,22 @@ jobs:
           git add .
           git commit -m "chore: commit changes before version bump" || echo "No changes to commit"
 
-      # Step 6: Bump the version
       - name: Bump version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm version patch -m "chore(release): %s [skip ci]"
+        run: npm version patch -m "chore(release): %s [skip ci]"
 
-      # Step 7: Debug npm publish (new step)
-      - name: Debug npm publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          npm whoami
-          npm publish --access public --verbose
+      - name: Configure NPM authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-      # Step 8: Publish the package
+      - name: Debug npm whoami
+        run: npm whoami
+
       - name: Publish package
-        if: always()  # Ensure this runs even if the debug step fails
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          npm publish --access public
+        run: npm publish --access public
 
-      # Step 9: Push changes and tags to the repository
       - name: Push changes and tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
