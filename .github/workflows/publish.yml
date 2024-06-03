@@ -25,6 +25,19 @@ jobs:
       - name: Build package
         run: npm run build
 
+      - name: Commit uncommitted changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: commit changes before version bump" || echo "No changes to commit"
+
+      - name: Bump version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+         npm version patch -m "chore(release): %s [skip ci]"
+
       - name: Configure NPM authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
@@ -37,7 +50,7 @@ jobs:
             echo "NPM_TOKEN is not set"
             exit 1
           else
-            echo "NPM_TOKEN is set ${{ secrets.NPM_TOKEN }}"
+            echo "NPM_TOKEN is set"
           fi
 
       - name: Publish package
