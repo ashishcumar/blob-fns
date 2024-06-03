@@ -1,0 +1,41 @@
+name: Publish npm Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Bump version and publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Bump the version
+          npm version patch -m "chore(release): %s [skip ci]"
+          # Publish the package
+          npm publish
+          # Configure git user
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Commit and push the changes including tags
+          git add package.json package-lock.json
+          git commit -m "chore(release): bump version to $(jq -r '.version' package.json) [skip ci]"
+          git tag v$(jq -r '.version' package.json)
+          git push origin HEAD:main --tags
