@@ -35,7 +35,8 @@ jobs:
       - name: Bump version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm version patch -m "chore(release): %s [skip ci]"
+        run: |
+        npm version patch -m "chore(release): %s [skip ci]"
 
       - name: Configure NPM authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
