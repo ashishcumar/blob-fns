@@ -6,7 +6,7 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && git add . && git commit -m 'deployed-automated-build' && git push"
+    "build": "tsup"
   },
   "repository": {
     "type": "git",
