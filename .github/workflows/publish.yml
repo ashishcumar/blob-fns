@@ -36,11 +36,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm version patch -m "chore(release): %s [skip ci]"
-        
+         npm version patch -m "chore(release): %s [skip ci]"
 
       - name: Configure NPM authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Show .npmrc
+        run: cat ~/.npmrc
+
+      - name: Verify NPM_TOKEN
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "NPM_TOKEN is not set"
+            exit 1
+          else
+            echo "NPM_TOKEN is set"
+          fi
 
       - name: Debug npm whoami
         run: npm whoami
