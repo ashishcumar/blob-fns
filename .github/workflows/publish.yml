@@ -10,18 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "14"
           registry-url: "https://registry.npmjs.org"
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step 4: Commit any uncommitted changes
       - name: Commit uncommitted changes
         run: |
           git config user.name "github-actions[bot]"
@@ -29,18 +33,22 @@ jobs:
           git add .
           git commit -m "chore: commit changes before version bump" || echo "No changes to commit"
 
+      # Step 5: Bump the version
       - name: Bump version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm version patch -m "chore(release): %s [skip ci]"
 
+      # Step 6: Publish the package
       - name: Publish package
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm publish --registry https://registry.npmjs.org/
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          npm publish
 
+      # Step 7: Push changes and tags to the repository
       - name: Push changes and tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
